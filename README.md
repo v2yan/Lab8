@@ -19,5 +19,7 @@ Yes because this feature can be tested without involving interaction with other 
 
 1. What do you expect to happen if we run our puppeteer tests with the field “headless” set to true?
 
+If the "headless" field is set to true, then our puppeteer tests would be able to run without a browser UI. 
+
 2. What would your beforeAll callback look like if you wanted to start from the settings page before every test case?
 
