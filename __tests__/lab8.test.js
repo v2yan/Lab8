@@ -1,5 +1,5 @@
 describe('Basic user flow for SPA ', () => {
-  beforeAll(async () => {
+  beforeAll(async () => { // changed from beforeAll to beforeEach to run before every test case
     await page.goto('http://127.0.0.1:5500');
     await page.waitForTimeout(500);
   });
@@ -29,11 +29,16 @@ describe('Basic user flow for SPA ', () => {
 
   it('Test3: Clicking first <journal-entry>, new URL should contain /#entry1', async () => {
     // implement test3: Clicking on the first journal entry should update the URL to contain “/#entry1”
-
+    await page.click('journal-entry');
+    const url = await page.url();
+    expect(url).toBe('http://127.0.0.1:5500/#entry1');
+    
   });
 
   it('Test4: On first Entry page - checking page header title', async () => {
     // implement test4: Clicking on the first journal entry should update the header text to “Entry 1” 
+    const header = await page.$eval('body > header > h1', el => el.innerHTML);
+    expect(header).toBe('Entry 1');
 
   });
 
@@ -51,47 +56,82 @@ describe('Basic user flow for SPA ', () => {
         }
       */
 
+      // no way to query nodes through shadowroot - querying .entry-title does not work
+      //const header = await page.$eval('body > entry-page > section:nth-child(1)', el => el.innerHTML);
+      //expect(entryTitle).toBe('You like jazz?');
+      const title = await page.evaluate('document.querySelector(".entry-title").innerHTML()');
+      expect(title).toBe('You like jazz?');
   }, 10000);
 
   it('Test6: On first Entry page - checking <body> element classes', async () => {
     // implement test6: Clicking on the first journal entry should update the class attribute of <body> to ‘single-entry’
+    const classAttr = await page.evaluate('document.querySelector("body").getAttribute("class")');
+    expect(classAttr).toBe('single-entry');
 
   });
 
   it('Test7: Clicking the settings icon, new URL should contain #settings', async () => {
     // implement test7: Clicking on the settings icon should update the URL to contain “/#settings”
+    await page.click('img');
+    const url = await page.url();
+    expect(url).toBe('http://127.0.0.1:5500/#settings');
 
   });
 
   it('Test8: On Settings page - checking page header title', async () => {
     // implement test8: Clicking on the settings icon should update the header to be “Settings”
+    const header = await page.$eval('body > header > h1', el => el.innerHTML);
+    expect(header).toBe('Settings');
 
   });
 
   it('Test9: On Settings page - checking <body> element classes', async () => {
     // implement test9: Clicking on the settings icon should update the class attribute of <body> to ‘settings’
+    const classAttr = await page.evaluate('document.querySelector("body").getAttribute("class")');
+    expect(classAttr).toBe('settings');
 
   });
 
   it('Test10: Clicking the back button, new URL should be /#entry1', async() => {
     // implement test10: Clicking on the back button should update the URL to contain ‘/#entry1’
+    await page.goBack();
+    const url = await page.url();
+    expect(url).toBe('http://127.0.0.1:5500/#entry1');
 
   });
 
   // define and implement test11: Clicking the back button once should bring the user back to the home page
+  it('Test11: Clicking the back button once should bring the user back to the home page', async() => {
+    await page.goBack();
+    const url = await page.url();
+    expect(url).toBe('http://127.0.0.1:5500/');
 
+  });
 
   // define and implement test12: When the user if on the homepage, the header title should be “Journal Entries”
+  it('Test12: When the user if on the homepage, the header title should be “Journal Entries”', async() => {
+    const header = await page.$eval('body > header > h1', el => el.innerHTML);
+    expect(header).toBe('Journal Entries');
+
+  });
 
 
   // define and implement test13: On the home page the <body> element should not have any class attribute 
+  it('Test13: On the home page the <body> element should not have any class attribute', async() => {
+    const classAttr = await page.evaluate('document.querySelector("body").getAttribute("class")');
+    expect(classAttr).toBe('');
 
+  });
 
   // define and implement test14: Verify the url is correct when clicking on the second entry
+  it('Test14: Verify the url is correct when clicking on the second entry', async() => {
+    await page.click('journal-entry:nth-child(2)');
+    const url = await page.url();
+    expect(url).toBe('http://127.0.0.1:5500/#entry2');
 
+  });
 
   // define and implement test15: Verify the title is current when clicking on the second entry
-
 
   // define and implement test16: Verify the entry page contents is correct when clicking on the second entry
 
