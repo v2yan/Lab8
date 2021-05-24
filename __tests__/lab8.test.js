@@ -137,16 +137,14 @@ describe('Basic user flow for SPA ', () => {
   });
 
   // define and implement test15: Verify the title is current when clicking on the second entry
-  it('Test15: Very the title is current when clicking on the second entry', async() => {
+  it('Test15: Verify the title is current when clicking on the second entry', async() => {
     const header = await page.$eval('body > header > h1', el => el.innerHTML);
     expect(header).toBe('Entry 2');
   });
 
 
-
-
   // define and implement test16: Verify the entry page contents is correct when clicking on the second entry
-  it('Test16: Very the entry page contents is correct when clicking on second entry', async() => {
+  it('Test16: Verify the entry page contents is correct when clicking on second entry', async() => {
     const entryPage = await page.$('entry-page');
     const entry = await entryPage.getProperty('entry');
     const entryContent = await entry.jsonValue();
@@ -180,15 +178,27 @@ describe('Basic user flow for SPA ', () => {
 
 
   // create your own test 19
-  it('Test19', async() => {
-
-  });
+  it('Test19: Verify clicking on the back button two times after the user has clicked the first journal entry and then clicked settings will take them back to the home page', async() => {
+    await page.goto('http://127.0.0.1:5500');
+    await page.click('journal-entry');
+    await page.click('img');
+    await page.goBack();
+    await page.goBack();
+    const url = page.url();
+    expect(url).toBe('http://127.0.0.1:5500/');
+  }, 15000);
 
 
   // create your own test 20
-  it('Test20', async() => {
+  it('Test20: Verify image is not undefined in entry 10', async() => {
+    await page.click('journal-entry:nth-child(10)');
+    const entryPage = await page.$('entry-page');
+    const entry = await entryPage.getProperty('entry');
+    const entryContent = await entry.jsonValue();
 
-  });
+    expect(entryContent.image).not.toBe(undefined);
+
+  }, 10000);
 
   
 });
